@@ -9,7 +9,12 @@
     "makeTestRepos": "rm -rf test/repos/{mercurial,git}; cd test/repos/ && tar -xf mercurial.tar.gz && tar -xf git.tar.gz",
     "test": "npm run makeTestRepos && mocha --bail --reporter=spec test/index --timeout 4000",
     "dev": "gulp",
-    "sync": "npm install && npm prune && bower install && bower prune"
+    "sync": "npm install && npm prune && bower install && bower prune",
+    "buildCss": "lessc static/css/index.less static/css/index.css",
+    "buildFonts": "rm static/fonts/* && cp static/js/libs/bootstrap/fonts/* static/js/libs/font-awesome/fonts/* static/fonts/",
+    "watchCss": "chokidar static/css/**/*.less --initial --silent -c 'npm run buildCss'",
+    "watchServer": "nodemon -i 'static/**/*.js' -i 'app/**/*.js' -i 'node_modules/**' -i 'data/**' app.js",
+    "watch": "parallelshell 'npm run watchServer' 'npm run buildFonts' 'npm run watchCss'"
   },
   "repository": {
     "type": "git",
@@ -51,17 +56,20 @@
   },
   "devDependencies": {
     "bower": "1.4.1",
+    "chokidar-cli": "1.0.0",
     "expect.js": "0.3.1",
     "gulp": "3.8.11",
     "gulp-less": "3.0.3",
     "gulp-nodemon": "2.0.3",
     "gulp-react-jade-amd": "git://github.com/vladimir-polyakov/gulp-react-jade-amd",
+    "less": "2.5.1",
     "main-bower-files": "2.7.0",
     "medeadown": "1.1.7",
     "memdown": "1.0.0",
     "mocha": "1.18.2",
     "nci-yaml-reader": "0.1.0",
     "nodemon": "1.3.7",
+    "parallelshell": "1.2.0",
     "sinon": "1.14.1"
   }
 }
